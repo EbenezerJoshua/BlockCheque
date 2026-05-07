@@ -87,11 +87,19 @@ def RegisterAction(request):
         if status == "none":
             msg = contract.functions.createUser(username, email, password, contact, address, utype).transact()
             tx_receipt = web3.eth.waitForTransactionReceipt(msg)
-            formatted_data = format_tx_receipt(tx_receipt, "Signup Process Completed")
-            context= {'data': formatted_data}
+            formatted_data = format_tx_receipt(tx_receipt, "Blockchain Receipt")
+            context = {
+                'success': True,
+                'tx_html': formatted_data,
+                'username': username,
+                'contact': contact,
+                'email': email,
+                'address': address,
+                'utype': utype
+            }
             return render(request, 'Register.html', context)
         else:
-            context= {'data':'Given username already exists'}
+            context= {'error': 'Given username already exists'}
             return render(request, 'Register.html', context)
 
 def BankLoginAction(request):
