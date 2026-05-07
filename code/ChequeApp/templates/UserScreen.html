@@ -15,8 +15,7 @@
         </div>
         <nav>
             <ul class="nav-links">
-                <li><a href="{% url 'GenerateCheque' %}">Digital Cheque Generation</a></li>
-                <li><a href="{% url 'ViewStatus' %}">View Status</a></li>
+                <li><a href="{% url 'UserDashboard' %}">Dashboard</a></li>
                 <li><a href="{% url 'index' %}" style="color: var(--danger);">Logout</a></li>
             </ul>
         </nav>
@@ -27,16 +26,16 @@
             <h2>User Dashboard</h2>
             <p style="color: var(--text-muted); margin-bottom: 2rem;">Welcome to your secure cheque management portal.</p>
             
-            <div style="display: flex; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap;">
-                <a href="{% url 'GenerateCheque' %}" class="btn btn-primary" style="margin-top: 0; width: auto; text-decoration: none;">Digital Cheque Generation</a>
-                <a href="{% url 'ViewStatus' %}" class="btn btn-outline" style="margin-top: 0; width: auto; padding: 0.75rem 1.5rem; display: inline-flex; align-items: center; justify-content: center; text-decoration: none; border-radius: 8px;">View Status</a>
-            </div>
-            
             {% if data %}
-                <div class="alert alert-success" style="text-align: left; background: var(--bg-secondary); border: 1px solid var(--glass-border); color: var(--text-main);">
+                <div class="alert alert-success" style="text-align: left; background: var(--bg-secondary); border: 1px solid var(--glass-border); color: var(--text-main); margin-bottom: 2rem; overflow-x: auto;">
                     {{ data|safe }}
                 </div>
             {% endif %}
+
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                <a href="{% url 'GenerateCheque' %}" class="btn btn-primary" style="margin-top: 0; width: auto; text-decoration: none;">Digital Cheque Generation</a>
+                <a href="{% url 'ViewStatus' %}" class="btn btn-outline" style="margin-top: 0; width: auto; padding: 0.75rem 1.5rem; display: inline-flex; align-items: center; justify-content: center; text-decoration: none; border-radius: 8px;">View Status</a>
+            </div>
         </div>
     </main>
 

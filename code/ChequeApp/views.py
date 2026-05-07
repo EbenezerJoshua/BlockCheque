@@ -137,12 +137,16 @@ def UserLoginAction(request):
                 status = "success"
                 break
         if status == 'success':
-            output = 'Welcome '+username
-            context= {'data':output}
-            return render(request, "UserScreen.html", context)
+            return redirect('UserDashboard')
         if status == 'none':
             context= {'data':'Invalid login details'}
             return render(request, 'UserLogin.html', context)
+
+def UserDashboard(request):
+    global uname
+    output = 'Welcome '+uname
+    context= {'data':output}
+    return render(request, 'UserScreen.html', context)
 
 def GenerateCheque(request):
     if request.method == 'GET':

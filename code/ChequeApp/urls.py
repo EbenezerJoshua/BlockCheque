@@ -14,6 +14,7 @@ urlpatterns = [
   path("GenerateCheque.html", views.GenerateCheque, name="GenerateCheque"),	      
     path("GenerateChequeAction", views.GenerateChequeAction, name="GenerateChequeAction"),
   path("BankDashboard", views.BankDashboard, name="BankDashboard"),
+  path("UserDashboard", views.UserDashboard, name="UserDashboard"),
   path("ClearCheque", views.ClearCheque, name="ClearCheque"),
   path("ViewStatus", views.ViewStatus, name="ViewStatus"),
 ]
