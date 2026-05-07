@@ -258,16 +258,7 @@ def BankDashboard(request, message=None):
     global uname, contract
     if request.method == 'GET' or request.method == 'POST':
         # 1. Pending Cheques Table
-        output_pending = '<div class="table-container"><table>'
-        output_pending+='<thead><tr><th>Sender Name</th>'
-        output_pending+='<th>Bank Name</th>'
-        output_pending+='<th>Receiver Name</th>'
-        output_pending+='<th>Amount</th>'
-        output_pending+='<th>Cheque Date</th>'
-        output_pending+='<th>Hashcode</th>'
-        output_pending+='<th>Status</th>'
-        output_pending+='<th>QR Code</th>'
-        output_pending+='<th>Clear Cheque</th></tr></thead><tbody>'
+        pending_rows = ""
         count = contract.functions.getChequeCount().call()
         for i in range(0, count):
             hashcode = contract.functions.getCode(i).call()
@@ -276,22 +267,33 @@ def BankDashboard(request, message=None):
                 data = getCode(hashcode)
                 arr = str(data).strip().split("#")
                 if arr[1] == uname:
-                    output_pending+='<tr><td>'+arr[0]+'</td>'
-                    output_pending+='<td>'+arr[1]+'</td>'
-                    output_pending+='<td>'+str(arr[2])+'</td>'
-                    output_pending+='<td>'+str(arr[3])+'</td>'
-                    output_pending+='<td>'+str(arr[4])+'</td>'
-                    output_pending+='<td>'+hashcode[0:30]+'</td>'
-                    output_pending+='<td><span class="status-badge">'+status+'</span></td>'
-                    output_pending+='<td><img src="/static/files/'+hashcode+'.png" width="100" height="100" style="border-radius: 8px;"></td>'
-                    output_pending+='<td><a href=\'ClearCheque?chequeno='+str(i)+'&sender='+arr[0]+'&receiver='+arr[2]+'&amount='+arr[3]+'\' class="btn btn-primary" style="padding: 0.5rem; font-size: 0.85rem; margin-top: 0;">Clear</a></td></tr>'
-        output_pending+="</tbody></table></div>"
+                    pending_rows+='<tr><td>'+arr[0]+'</td>'
+                    pending_rows+='<td>'+arr[1]+'</td>'
+                    pending_rows+='<td>'+str(arr[2])+'</td>'
+                    pending_rows+='<td>'+str(arr[3])+'</td>'
+                    pending_rows+='<td>'+str(arr[4])+'</td>'
+                    pending_rows+='<td>'+hashcode[0:30]+'</td>'
+                    pending_rows+='<td><span class="status-badge">'+status+'</span></td>'
+                    pending_rows+='<td><img src="/static/files/'+hashcode+'.png" width="100" height="100" style="border-radius: 8px;"></td>'
+                    pending_rows+='<td><a href=\'ClearCheque?chequeno='+str(i)+'&sender='+arr[0]+'&receiver='+arr[2]+'&amount='+arr[3]+'\' class="btn btn-primary" style="padding: 0.5rem; font-size: 0.85rem; margin-top: 0;">Clear</a></td></tr>'
+        
+        if pending_rows == "":
+            output_pending = '<p style="color: var(--text-muted); font-size: 1.1rem;">There are no pending cheques to approve as of now.</p>'
+        else:
+            output_pending = '<div class="table-container"><table>'
+            output_pending+='<thead><tr><th>Sender Name</th>'
+            output_pending+='<th>Bank Name</th>'
+            output_pending+='<th>Receiver Name</th>'
+            output_pending+='<th>Amount</th>'
+            output_pending+='<th>Cheque Date</th>'
+            output_pending+='<th>Hashcode</th>'
+            output_pending+='<th>Status</th>'
+            output_pending+='<th>QR Code</th>'
+            output_pending+='<th>Clear Cheque</th></tr></thead><tbody>'
+            output_pending += pending_rows
+            output_pending+="</tbody></table></div>"
 
         # 2. Daily Transactions Table
-        output_daily = '<div class="table-container"><table>'
-        output_daily+='<thead><tr><th>Bank Name</th>'
-        output_daily+='<th>Date</th>'
-        output_daily+='<th>Daily Transaction</th></tr></thead><tbody>'
         transaction = {}
         for i in range(0, count):
             hashcode = contract.functions.getCode(i).call()
@@ -303,11 +305,19 @@ def BankDashboard(request, message=None):
                     transaction[arr[4]] = float(arr[3])
                 else:
                     transaction[arr[4]] += float(arr[3])
-        for key, value in transaction.items():
-            output_daily+='<tr><td>'+uname+'</td>'
-            output_daily+='<td>'+str(key)+'</td>'
-            output_daily+='<td>'+str(value)+'</td></tr>'
-        output_daily+="</tbody></table></div>"
+        
+        if not transaction:
+            output_daily = '<p style="color: var(--text-muted); font-size: 1.1rem;">There are no daily transactions as of now.</p>'
+        else:
+            output_daily = '<div class="table-container"><table>'
+            output_daily+='<thead><tr><th>Bank Name</th>'
+            output_daily+='<th>Date</th>'
+            output_daily+='<th>Daily Transaction</th></tr></thead><tbody>'
+            for key, value in transaction.items():
+                output_daily+='<tr><td>'+uname+'</td>'
+                output_daily+='<td>'+str(key)+'</td>'
+                output_daily+='<td>'+str(value)+'</td></tr>'
+            output_daily+="</tbody></table></div>"
 
         context= {'data': message, 'pending_cheques': output_pending, 'daily_transactions': output_daily}
         return render(request, 'BankScreen.html', context)
