@@ -31,6 +31,26 @@ def getContract():
     contract = web3.eth.contract(address=deployed_contract_address, abi=contract_abi)
 getContract()
 
+def format_tx_receipt(receipt, title):
+    tx_hash = receipt['transactionHash'].hex()
+    block_num = receipt['blockNumber']
+    gas_used = receipt['gasUsed']
+    from_addr = receipt['from']
+    to_addr = receipt['to']
+    html = f"""
+    <div class="tx-receipt" style="margin-top: 10px;">
+        <h4 style="margin-bottom: 12px; font-weight: 600; font-size: 1.1rem; color: var(--success);">✔ {title}</h4>
+        <div style="background: rgba(0,0,0,0.25); padding: 15px; border-radius: 8px; font-family: 'Courier New', Courier, monospace; font-size: 0.95rem; overflow-x: auto; color: var(--text-main); border: 1px solid rgba(255,255,255,0.05);">
+            <p style="margin-bottom: 8px;"><strong style="color: var(--text-muted); display: inline-block; width: 140px;">Transaction Hash:</strong> <span style="color: var(--accent-primary); word-break: break-all;">{tx_hash}</span></p>
+            <p style="margin-bottom: 8px;"><strong style="color: var(--text-muted); display: inline-block; width: 140px;">Block Number:</strong> {block_num}</p>
+            <p style="margin-bottom: 8px;"><strong style="color: var(--text-muted); display: inline-block; width: 140px;">Gas Used:</strong> {gas_used}</p>
+            <p style="margin-bottom: 8px;"><strong style="color: var(--text-muted); display: inline-block; width: 140px;">From Address:</strong> {from_addr}</p>
+            <p style="margin-bottom: 0;"><strong style="color: var(--text-muted); display: inline-block; width: 140px;">To Contract:</strong> {to_addr}</p>
+        </div>
+    </div>
+    """
+    return html
+
 
 def index(request):
     if request.method == 'GET':
@@ -67,7 +87,8 @@ def RegisterAction(request):
         if status == "none":
             msg = contract.functions.createUser(username, email, password, contact, address, utype).transact()
             tx_receipt = web3.eth.waitForTransactionReceipt(msg)
-            context= {'data':'Signup Process Completed<br/>'+str(tx_receipt)}
+            formatted_data = format_tx_receipt(tx_receipt, "Signup Process Completed")
+            context= {'data': formatted_data}
             return render(request, 'Register.html', context)
         else:
             context= {'data':'Given username already exists'}
@@ -173,7 +194,8 @@ def GenerateChequeAction(request):
         file.close()
         msg = contract.functions.createCheque(sha256hash, "Pending").transact()
         tx_receipt = web3.eth.waitForTransactionReceipt(msg)
-        context= {'data':'Cheque Generation Completed<br/>'+str(tx_receipt)}
+        formatted_data = format_tx_receipt(tx_receipt, "Cheque Generation Completed")
+        context= {'data': formatted_data}
         return render(request, 'UserScreen.html', context)
                 
 
