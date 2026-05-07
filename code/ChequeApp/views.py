@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.template import RequestContext
 from django.contrib import messages
 import json
@@ -92,8 +92,7 @@ def BankLoginAction(request):
                 status = "success"
                 break
         if status == 'success':
-            output = 'Welcome '+username
-            return BankDashboard(request, message=output)
+            return redirect('BankDashboard')
         if status == 'none':
             context= {'data':'Invalid login details'}
             return render(request, 'BankLogin.html', context)
