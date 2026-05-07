@@ -93,8 +93,7 @@ def BankLoginAction(request):
                 break
         if status == 'success':
             output = 'Welcome '+username
-            context= {'data':output}
-            return render(request, "BankScreen.html", context)
+            return BankDashboard(request, message=output)
         if status == 'none':
             context= {'data':'Invalid login details'}
             return render(request, 'BankLogin.html', context)
@@ -254,22 +253,22 @@ def ClearCheque(request):
             if user1 == receiver:    
                 receiver_email = email_id
         sendMail(sender_email, receiver_email, amount, sender, receiver)         
-        context= {'data':'Cheque status successfully cleared'}
-        return render(request, 'BankScreen.html', context)
+        return BankDashboard(request, message='Cheque status successfully cleared')
 
-def ViewPending(request):
-    if request.method == 'GET':
-        global uname
-        output = '<div class="table-container"><table>'
-        output+='<thead><tr><th>Sender Name</th>'
-        output+='<th>Bank Name</th>'
-        output+='<th>Receiver Name</th>'
-        output+='<th>Amount</th>'
-        output+='<th>Cheque Date</th>'
-        output+='<th>Hashcode</th>'
-        output+='<th>Status</th>'
-        output+='<th>QR Code</th>'
-        output+='<th>Clear Cheque</th></tr></thead><tbody>'
+def BankDashboard(request, message=None):
+    global uname, contract
+    if request.method == 'GET' or request.method == 'POST':
+        # 1. Pending Cheques Table
+        output_pending = '<div class="table-container"><table>'
+        output_pending+='<thead><tr><th>Sender Name</th>'
+        output_pending+='<th>Bank Name</th>'
+        output_pending+='<th>Receiver Name</th>'
+        output_pending+='<th>Amount</th>'
+        output_pending+='<th>Cheque Date</th>'
+        output_pending+='<th>Hashcode</th>'
+        output_pending+='<th>Status</th>'
+        output_pending+='<th>QR Code</th>'
+        output_pending+='<th>Clear Cheque</th></tr></thead><tbody>'
         count = contract.functions.getChequeCount().call()
         for i in range(0, count):
             hashcode = contract.functions.getCode(i).call()
@@ -278,27 +277,22 @@ def ViewPending(request):
                 data = getCode(hashcode)
                 arr = str(data).strip().split("#")
                 if arr[1] == uname:
-                    output+='<tr><td>'+arr[0]+'</td>'
-                    output+='<td>'+arr[1]+'</td>'
-                    output+='<td>'+str(arr[2])+'</td>'
-                    output+='<td>'+str(arr[3])+'</td>'
-                    output+='<td>'+str(arr[4])+'</td>'
-                    output+='<td>'+hashcode[0:30]+'</td>'
-                    output+='<td><span class="status-badge">'+status+'</span></td>'
-                    output+='<td><img src="/static/files/'+hashcode+'.png" width="100" height="100" style="border-radius: 8px;"></td>'
-                    output+='<td><a href=\'ClearCheque?chequeno='+str(i)+'&sender='+arr[0]+'&receiver='+arr[2]+'&amount='+arr[3]+'\' class="btn btn-primary" style="padding: 0.5rem; font-size: 0.85rem; margin-top: 0;">Clear</a></td></tr>'
-        output+="</tbody></table></div>"
-        context= {'data':output}
-        return render(request, 'BankScreen.html', context) 
+                    output_pending+='<tr><td>'+arr[0]+'</td>'
+                    output_pending+='<td>'+arr[1]+'</td>'
+                    output_pending+='<td>'+str(arr[2])+'</td>'
+                    output_pending+='<td>'+str(arr[3])+'</td>'
+                    output_pending+='<td>'+str(arr[4])+'</td>'
+                    output_pending+='<td>'+hashcode[0:30]+'</td>'
+                    output_pending+='<td><span class="status-badge">'+status+'</span></td>'
+                    output_pending+='<td><img src="/static/files/'+hashcode+'.png" width="100" height="100" style="border-radius: 8px;"></td>'
+                    output_pending+='<td><a href=\'ClearCheque?chequeno='+str(i)+'&sender='+arr[0]+'&receiver='+arr[2]+'&amount='+arr[3]+'\' class="btn btn-primary" style="padding: 0.5rem; font-size: 0.85rem; margin-top: 0;">Clear</a></td></tr>'
+        output_pending+="</tbody></table></div>"
 
-def DailyTransaction(request):
-    if request.method == 'GET':
-        global uname
-        output = '<div class="table-container"><table>'
-        output+='<thead><tr><th>Bank Name</th>'
-        output+='<th>Date</th>'
-        output+='<th>Daily Transaction</th></tr></thead><tbody>'
-        count = contract.functions.getChequeCount().call()
+        # 2. Daily Transactions Table
+        output_daily = '<div class="table-container"><table>'
+        output_daily+='<thead><tr><th>Bank Name</th>'
+        output_daily+='<th>Date</th>'
+        output_daily+='<th>Daily Transaction</th></tr></thead><tbody>'
         transaction = {}
         for i in range(0, count):
             hashcode = contract.functions.getCode(i).call()
@@ -311,12 +305,13 @@ def DailyTransaction(request):
                 else:
                     transaction[arr[4]] += float(arr[3])
         for key, value in transaction.items():
-            output+='<tr><td>'+uname+'</td>'
-            output+='<td>'+str(key)+'</td>'
-            output+='<td>'+str(value)+'</td></tr>'
-        output+="</tbody></table></div>"
-        context= {'data':output}
-        return render(request, 'BankScreen.html', context)    
+            output_daily+='<tr><td>'+uname+'</td>'
+            output_daily+='<td>'+str(key)+'</td>'
+            output_daily+='<td>'+str(value)+'</td></tr>'
+        output_daily+="</tbody></table></div>"
+
+        context= {'data': message, 'pending_cheques': output_pending, 'daily_transactions': output_daily}
+        return render(request, 'BankScreen.html', context)
 
         
         

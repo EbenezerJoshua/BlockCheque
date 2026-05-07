@@ -13,8 +13,7 @@ urlpatterns = [
     path("BankLoginAction", views.BankLoginAction, name="BankLoginAction"),
   path("GenerateCheque.html", views.GenerateCheque, name="GenerateCheque"),	      
     path("GenerateChequeAction", views.GenerateChequeAction, name="GenerateChequeAction"),
-  path("ViewPending", views.ViewPending, name="ViewPending"),
-  path("DailyTransaction", views.DailyTransaction, name="DailyTransaction"),
+  path("BankDashboard", views.BankDashboard, name="BankDashboard"),
   path("ClearCheque", views.ClearCheque, name="ClearCheque"),
   path("ViewStatus", views.ViewStatus, name="ViewStatus"),
 ]

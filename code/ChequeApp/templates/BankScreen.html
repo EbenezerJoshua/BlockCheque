@@ -15,23 +15,34 @@
         </div>
         <nav>
             <ul class="nav-links">
-                <li><a href="{% url 'ViewPending' %}">View Pending Cheques</a></li>
-                <li><a href="{% url 'DailyTransaction' %}">Daily Transaction Statistics</a></li>
+                <li><a href="{% url 'BankDashboard' %}">Dashboard</a></li>
                 <li><a href="{% url 'index' %}" style="color: var(--danger);">Logout</a></li>
             </ul>
         </nav>
     </header>
 
-    <main class="main-content" style="align-items: stretch; justify-content: flex-start;">
-        <div class="glass-panel" style="padding: 2rem;">
+    <main class="main-content" style="align-items: stretch; justify-content: flex-start; max-width: 1400px;">
+        <div class="glass-panel" style="padding: 2rem; margin-bottom: 2rem;">
             <h2>Bank Portal Dashboard</h2>
-            <p style="color: var(--text-muted); margin-bottom: 2rem;">Manage pending clearances and view daily statistics securely over the blockchain.</p>
+            <p style="color: var(--text-muted);">Manage pending clearances and view daily statistics securely over the blockchain.</p>
             
             {% if data %}
-                <div class="alert alert-success" style="text-align: left; background: var(--bg-secondary); border: 1px solid var(--glass-border); color: var(--text-main); overflow-x: auto;">
+                <div class="alert alert-success" style="text-align: left; background: var(--bg-secondary); border: 1px solid var(--glass-border); color: var(--text-main); margin-top: 1rem; overflow-x: auto;">
                     {{ data|safe }}
                 </div>
             {% endif %}
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 2rem;">
+            <div class="glass-panel" style="padding: 2rem; overflow-x: auto;">
+                <h3 style="margin-bottom: 1.5rem;">Pending Cheques to Approve</h3>
+                {{ pending_cheques|safe }}
+            </div>
+
+            <div class="glass-panel" style="padding: 2rem; overflow-x: auto;">
+                <h3 style="margin-bottom: 1.5rem;">Daily Transaction Statistics</h3>
+                {{ daily_transactions|safe }}
+            </div>
         </div>
     </main>
 
