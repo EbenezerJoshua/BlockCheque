@@ -23,7 +23,7 @@ def getContract():
     web3 = Web3(HTTPProvider(blockchain_address))
     web3.eth.defaultAccount = web3.eth.accounts[0]
     compiled_contract_path = 'Cheque.json' #cheque contract file
-    deployed_contract_address = '0xe419ABC4F29c9157417a834e1ac92081153e61b9' #contract address
+    deployed_contract_address = '0x36B506167fAC2F1c25311C2Abd1224b2332787b4' #contract address
     with open(compiled_contract_path) as file:
         contract_json = json.load(file)  # load contract info as JSON
         contract_abi = contract_json['abi']  # fetch contract's abi - necessary to call its functions
