@@ -1,0 +1,8 @@
+pip install Django==2.1.7
+pip install PyQRCode==1.2.1
+pip install pypng==0.0.21
+pip install web3==4.7.2
+pip install urllib3==1.26.18
+pip install requests==2.28.1
+pip install opencv-python==4.1.1.26
+pip install opencv-contrib-python==4.3.0.36
