@@ -138,18 +138,18 @@ def GenerateCheque(request):
                 banklist.append(user1)
             else:
                 userlist.append(user1)
-        output = '<tr><td><font size="3" color="black"><b>Bank&nbsp;Name</b></td>'
-        output += '<td><select name="t1">'
+        output = '<div class="form-group"><label for="t1">Bank Name</label>'
+        output += '<select name="t1" id="t1" class="form-control">'
         for i in range(len(banklist)):
             output += '<option value="'+banklist[i]+'">'+banklist[i]+'</option>'
-        output += '</select></td></tr>'
+        output += '</select></div>'
 
-        output += '<tr><td><font size="3" color="black"><b>Receiver&nbsp;Name</b></td>'
-        output += '<td><select name="t2">'
+        output += '<div class="form-group"><label for="t2">Receiver Name</label>'
+        output += '<select name="t2" id="t2" class="form-control">'
         for i in range(len(userlist)):
             if userlist[i] != uname:
                 output += '<option value="'+userlist[i]+'">'+userlist[i]+'</option>'
-        output += '</select></td></tr>'
+        output += '</select></div>'
         context= {'data1':output}
         return render(request, "GenerateCheque.html", context)
 
@@ -189,15 +189,15 @@ def getCode(hashcode):
 def ViewStatus(request):
     if request.method == 'GET':
         global uname
-        output = '<table border=1 align=center>'
-        output+='<tr><th><font size=3 color=black>Sender Name</font></th>'
-        output+='<th><font size=3 color=black>Bank Name</font></th>'
-        output+='<th><font size=3 color=black>Receiver Name</font></th>'
-        output+='<th><font size=3 color=black>Amount</font></th>'
-        output+='<th><font size=3 color=black>Cheque Date</font></th>'
-        output+='<th><font size=3 color=black>Hashcode</font></th>'
-        output+='<th><font size=3 color=black>Status</font></th>'
-        output+='<th><font size=3 color=black>QR Code</font></th></tr>'
+        output = '<div class="table-container"><table>'
+        output+='<thead><tr><th>Sender Name</th>'
+        output+='<th>Bank Name</th>'
+        output+='<th>Receiver Name</th>'
+        output+='<th>Amount</th>'
+        output+='<th>Cheque Date</th>'
+        output+='<th>Hashcode</th>'
+        output+='<th>Status</th>'
+        output+='<th>QR Code</th></tr></thead><tbody>'
         count = contract.functions.getChequeCount().call()
         for i in range(0, count):
             hashcode = contract.functions.getCode(i).call()
@@ -206,15 +206,15 @@ def ViewStatus(request):
             print(type(data))
             arr = str(data).strip().split("#")
             if arr[0] == uname or arr[2] == uname:
-                output+='<tr><td><font size=3 color=black>'+arr[0]+'</font></td>'
-                output+='<td><font size=3 color=black>'+arr[1]+'</font></td>'
-                output+='<td><font size=3 color=black>'+str(arr[2])+'</font></td>'
-                output+='<td><font size=3 color=black>'+str(arr[3])+'</font></td>'
-                output+='<td><font size=3 color=black>'+str(arr[4])+'</font></td>'
-                output+='<td><font size=3 color=black>'+hashcode[0:30]+'</font></td>'
-                output+='<td><font size=3 color=black>'+status+'</font></td>'
-                output+='<td><img src="/static/files/'+hashcode+'.png" width="200" height="200"></img></td></tr>'                    
-        output+="</table><br/><br/><br/><br/><br/><br/>"
+                output+='<tr><td>'+arr[0]+'</td>'
+                output+='<td>'+arr[1]+'</td>'
+                output+='<td>'+str(arr[2])+'</td>'
+                output+='<td>'+str(arr[3])+'</td>'
+                output+='<td>'+str(arr[4])+'</td>'
+                output+='<td>'+hashcode[0:30]+'</td>'
+                output+='<td><span class="status-badge">'+status+'</span></td>'
+                output+='<td><img src="/static/files/'+hashcode+'.png" width="100" height="100" style="border-radius: 8px;"></td></tr>'                    
+        output+="</tbody></table></div>"
         context= {'data':output}
         return render(request, 'UserScreen.html', context)              
         
@@ -260,16 +260,16 @@ def ClearCheque(request):
 def ViewPending(request):
     if request.method == 'GET':
         global uname
-        output = '<table border=1 align=center>'
-        output+='<tr><th><font size=3 color=black>Sender Name</font></th>'
-        output+='<th><font size=3 color=black>Bank Name</font></th>'
-        output+='<th><font size=3 color=black>Receiver Name</font></th>'
-        output+='<th><font size=3 color=black>Amount</font></th>'
-        output+='<th><font size=3 color=black>Cheque Date</font></th>'
-        output+='<th><font size=3 color=black>Hashcode</font></th>'
-        output+='<th><font size=3 color=black>Status</font></th>'
-        output+='<th><font size=3 color=black>QR Code</font></th>'
-        output+='<th><font size=3 color=black>Clear Cheque</font></th></tr>'
+        output = '<div class="table-container"><table>'
+        output+='<thead><tr><th>Sender Name</th>'
+        output+='<th>Bank Name</th>'
+        output+='<th>Receiver Name</th>'
+        output+='<th>Amount</th>'
+        output+='<th>Cheque Date</th>'
+        output+='<th>Hashcode</th>'
+        output+='<th>Status</th>'
+        output+='<th>QR Code</th>'
+        output+='<th>Clear Cheque</th></tr></thead><tbody>'
         count = contract.functions.getChequeCount().call()
         for i in range(0, count):
             hashcode = contract.functions.getCode(i).call()
@@ -278,26 +278,26 @@ def ViewPending(request):
                 data = getCode(hashcode)
                 arr = str(data).strip().split("#")
                 if arr[1] == uname:
-                    output+='<tr><td><font size=3 color=black>'+arr[0]+'</font></td>'
-                    output+='<td><font size=3 color=black>'+arr[1]+'</font></td>'
-                    output+='<td><font size=3 color=black>'+str(arr[2])+'</font></td>'
-                    output+='<td><font size=3 color=black>'+str(arr[3])+'</font></td>'
-                    output+='<td><font size=3 color=black>'+str(arr[4])+'</font></td>'
-                    output+='<td><font size=3 color=black>'+hashcode[0:30]+'</font></td>'
-                    output+='<td><font size=3 color=black>'+status+'</font></td>'
-                    output+='<td><img src="/static/files/'+hashcode+'.png" width="200" height="200"></img></td>'
-                    output+='<td><a href=\'ClearCheque?chequeno='+str(i)+'&sender='+arr[0]+'&receiver='+arr[2]+'&amount='+arr[3]+'\'><font size=3 color=black>Click Here</font></a></td></tr>'
-        output+="</table><br/><br/><br/><br/><br/><br/>"
+                    output+='<tr><td>'+arr[0]+'</td>'
+                    output+='<td>'+arr[1]+'</td>'
+                    output+='<td>'+str(arr[2])+'</td>'
+                    output+='<td>'+str(arr[3])+'</td>'
+                    output+='<td>'+str(arr[4])+'</td>'
+                    output+='<td>'+hashcode[0:30]+'</td>'
+                    output+='<td><span class="status-badge">'+status+'</span></td>'
+                    output+='<td><img src="/static/files/'+hashcode+'.png" width="100" height="100" style="border-radius: 8px;"></td>'
+                    output+='<td><a href=\'ClearCheque?chequeno='+str(i)+'&sender='+arr[0]+'&receiver='+arr[2]+'&amount='+arr[3]+'\' class="btn btn-primary" style="padding: 0.5rem; font-size: 0.85rem; margin-top: 0;">Clear</a></td></tr>'
+        output+="</tbody></table></div>"
         context= {'data':output}
         return render(request, 'BankScreen.html', context) 
 
 def DailyTransaction(request):
     if request.method == 'GET':
         global uname
-        output = '<table border=1 align=center>'
-        output+='<tr><th><font size=3 color=black>Bank Name</font></th>'
-        output+='<th><font size=3 color=black>Date</font></th>'
-        output+='<th><font size=3 color=black>Daily Transaction</font></th></tr>'
+        output = '<div class="table-container"><table>'
+        output+='<thead><tr><th>Bank Name</th>'
+        output+='<th>Date</th>'
+        output+='<th>Daily Transaction</th></tr></thead><tbody>'
         count = contract.functions.getChequeCount().call()
         transaction = {}
         for i in range(0, count):
@@ -311,10 +311,10 @@ def DailyTransaction(request):
                 else:
                     transaction[arr[4]] += float(arr[3])
         for key, value in transaction.items():
-            output+='<tr><td><font size=3 color=black>'+uname+'</font></td>'
-            output+='<td><font size=3 color=black>'+str(key)+'</font></td>'
-            output+='<td><font size=3 color=black>'+str(value)+'</font></td>'
-        output+="</table><br/><br/><br/><br/><br/><br/>"
+            output+='<tr><td>'+uname+'</td>'
+            output+='<td>'+str(key)+'</td>'
+            output+='<td>'+str(value)+'</td></tr>'
+        output+="</tbody></table></div>"
         context= {'data':output}
         return render(request, 'BankScreen.html', context)    
 

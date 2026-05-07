@@ -1,37 +1,49 @@
 {% load static %}
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<title>Blockchain Based Cheque Verification & Clearance System</title>
-<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-<link href="{% static 'style.css' %}" rel="stylesheet" type="text/css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BlockCheque | Verification & Clearance</title>
+    <link href="{% static 'style.css' %}" rel="stylesheet" type="text/css" />
 </head>
 <body>
-<div class="main">
-  <div class="main_resize">
-    <div class="header">
-      <div class="logo">
-        <h1><span>Blockchain Based Cheque Verification & Clearance System</span><small></small></h1>
-      </div>
-    </div>
-    <div class="content">
-      <div class="content_bg">
-        <div class="menu_nav">
-         
-           <ul>
-      <li><a href="{% url 'index' %}"><font size="3" color="black">Home</a></li>
-       <li><a href="{% url 'BankLogin' %}"><font size="3" color="black">Bank Login</a></li>
-	    <li><a href="{% url 'UserLogin' %}"><font size="3" color="black">User Login</a></li>
-      <li><a href="{% url 'Register' %}"><font size="3" color="black">Signup Here</a></li>
-   </ul>
-         
+
+    <header class="header-container">
+        <div class="logo-container">
+            <h1><span>BlockCheque</span> System</h1>
         </div>
-        <div class="hbg"><img src="{% static 'images/header_images.jpg' %}" width="915" height="286" alt="" /></div>
+        <nav>
+            <ul class="nav-links">
+                <li><a href="{% url 'index' %}">Home</a></li>
+                <li><a href="{% url 'BankLogin' %}">Bank Login</a></li>
+                <li><a href="{% url 'UserLogin' %}">User Login</a></li>
+                <li><a href="{% url 'Register' %}">Signup</a></li>
+            </ul>
+        </nav>
+    </header>
 
-		{{ data }}
+    <main class="main-content">
+        <section class="hero glass-panel">
+            <h1>Welcome to the Future of Cheque Clearance</h1>
+            <p>Experience secure, fast, and transparent cheque verification powered by Blockchain Technology. Join our network as a User or a Bank to get started.</p>
+            
+            {% if data %}
+            <div class="alert alert-success">
+                {{ data }}
+            </div>
+            {% endif %}
 
-       <p align="justify"><font size="3" style="font-family: Comic Sans MS" color="black">Blockchain Based Cheque Verification & Clearance System
-</p>
- 
- 
-  </body>
+            <div class="hero-buttons">
+                <a href="{% url 'UserLogin' %}" class="btn btn-primary" style="width: auto;">Login as User</a>
+                <a href="{% url 'BankLogin' %}" class="btn btn-outline" style="width: auto;">Bank Portal</a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Blockchain Based Cheque Verification & Clearance System. All rights reserved.</p>
+    </footer>
+
+</body>
 </html>

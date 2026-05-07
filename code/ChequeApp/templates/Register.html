@@ -1,111 +1,123 @@
 {% load static %}
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<title>Blockchain Based Cheque Verification & Clearance System</title>
-<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-<link href="{% static 'style.css' %}" rel="stylesheet" type="text/css" />
-<script language="javascript">
-	function validate(formObj)
-	{
-	if(formObj.t1.value.length==0)
-	{
-	alert("Please Enter Username");
-	formObj.t1.focus();
-	return false;
-	}
-	if(formObj.t2.value.length==0)
-	{
-	alert("Please Enter Password");
-	formObj.t2.focus();
-	return false;
-	}
-	if(formObj.t3.value.length==0)
-	{
-	alert("Please Enter Contact No");
-	formObj.t3.focus();
-	return false;
-	}
-	if(isNaN(formObj.t3.value)){
-		alert("Contact No must be numeric");
-		formObj.t3.focus();
-		return false;
-	}
-	if(formObj.t4.value.length==0)
-	{
-	alert("Please Enter Email Id");
-	formObj.t4.focus();
-	return false;
-	}
-	var filter = /^([a-zA-Z0-9_\.\-])+\@([a-z]+\.)+(com)+$/;
-    if (!filter.test(formObj.t4.value)) {
-		window.alert('Please enter valid email address');
-		formObj.t4.focus();
-		return false;
-	}
-	if(formObj.t5.value.length==0)
-	{
-	alert("Please Enter Address");
-	formObj.t5.focus();
-	return false;
-	}
-	return true;
-	}
-	</script>
-	
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BlockCheque | Register</title>
+    <link href="{% static 'style.css' %}" rel="stylesheet" type="text/css" />
+    <script>
+        function validate(formObj) {
+            if(formObj.t1.value.trim().length == 0) {
+                alert("Please Enter Username");
+                formObj.t1.focus();
+                return false;
+            }
+            if(formObj.t2.value.trim().length == 0) {
+                alert("Please Enter Password");
+                formObj.t2.focus();
+                return false;
+            }
+            if(formObj.t3.value.trim().length == 0) {
+                alert("Please Enter Contact No");
+                formObj.t3.focus();
+                return false;
+            }
+            if(isNaN(formObj.t3.value)){
+                alert("Contact No must be numeric");
+                formObj.t3.focus();
+                return false;
+            }
+            if(formObj.t4.value.trim().length == 0) {
+                alert("Please Enter Email Id");
+                formObj.t4.focus();
+                return false;
+            }
+            var filter = /^([a-zA-Z0-9_\.\-])+\@([a-zA-Z0-9\.\-])+\.([a-zA-Z]{2,4})+$/;
+            if (!filter.test(formObj.t4.value)) {
+                alert('Please enter valid email address');
+                formObj.t4.focus();
+                return false;
+            }
+            if(formObj.t5.value.trim().length == 0) {
+                alert("Please Enter Address");
+                formObj.t5.focus();
+                return false;
+            }
+            return true;
+        }
+    </script>
 </head>
 <body>
-<div class="main">
-  <div class="main_resize">
-    <div class="header">
-      <div class="logo">
-        <h1><span>Blockchain Based Cheque Verification & Clearance System</span><small></small></h1>
-      </div>
-    </div>
-    <div class="content">
-      <div class="content_bg">
-        <div class="menu_nav">
-         <ul>
-      <li><a href="{% url 'index' %}"><font size="3" color="black">Home</a></li>
-       <li><a href="{% url 'BankLogin' %}"><font size="3" color="black">Bank Login</a></li>
-	    <li><a href="{% url 'UserLogin' %}"><font size="3" color="black">User Login</a></li>
-      <li><a href="{% url 'Register' %}"><font size="3" color="black">Signup Here</a></li>
-   </ul>
+
+    <header class="header-container">
+        <div class="logo-container">
+            <h1><span>BlockCheque</span> System</h1>
         </div>
-        <div class="hbg"><img src="{% static 'images/header_images.jpg' %}" width="915" height="286" alt="" /></div>
-      				<center>
-<form name="f1" method="post" action={% url 'RegisterAction' %} onsubmit="return validate(this);">
-{% csrf_token %}<br/>
-   <h2><b>New User Signup Screen</b></h2>
-   
-	<font size="" color="red"><center>{{ data }}</center></font>
-						
-						<table align="center" width="30%" >
-			 <tr><td><font size='3' color="black"><b>Username</b></td>
-			 <td><input type="text" name="t1" style="font-family: Comic Sans MS" size="25"></td></tr>
-         
-		  <tr><td><font size='3' color="black"><b>Password</b></td><td><input name="t2" type="password" size="25"></td></tr>
+        <nav>
+            <ul class="nav-links">
+                <li><a href="{% url 'index' %}">Home</a></li>
+                <li><a href="{% url 'BankLogin' %}">Bank Login</a></li>
+                <li><a href="{% url 'UserLogin' %}">User Login</a></li>
+                <li><a href="{% url 'Register' %}">Signup</a></li>
+            </ul>
+        </nav>
+    </header>
 
-			<tr><td><font size='3' color="black"><b>Contact&nbsp;No</b></td>
-			<td><input name="t3" type="Text" size="15"></td></td></tr>
+    <main class="main-content">
+        <div class="form-container glass-panel">
+            <h2>Create an Account</h2>
+            
+            {% if data %}
+                <div class="alert alert-error">
+                    {{ data }}
+                </div>
+            {% endif %}
 
-		    
-		   <tr><td><font size='3' color="black"><b>Email&nbsp;ID</b></td><td><input type="text" name="t4" style="font-family: Comic Sans MS" size="50"/></td></tr>
+            <form name="f1" method="post" action="{% url 'RegisterAction' %}" onsubmit="return validate(this);">
+                {% csrf_token %}
+                
+                <div class="form-group">
+                    <label for="t1">Username</label>
+                    <input type="text" name="t1" id="t1" class="form-control" placeholder="Enter username">
+                </div>
 
-          <tr><td><font size='3' color="black"><b>Address</b></td><td><input name="t5" type="Text" size="70"></td></td></tr>
+                <div class="form-group">
+                    <label for="t2">Password</label>
+                    <input type="password" name="t2" id="t2" class="form-control" placeholder="Enter password">
+                </div>
 
-		  <tr><td><font size='3' color="black"><b>User&nbsp;Type</b></td><td><select name="t6">
-			<option value="Bank">Bank</option>
-			<option value="User">User</option>
-		  </select>
-		  </td></td></tr>
-			
-			
-			<tr><td></td><td><input type="submit" value="Submit"></td>
-			</table>
-				</div>	
-					
-				</div>
-				
-					
-	</body>
+                <div class="form-group">
+                    <label for="t3">Contact No</label>
+                    <input type="text" name="t3" id="t3" class="form-control" placeholder="Enter contact number">
+                </div>
+
+                <div class="form-group">
+                    <label for="t4">Email ID</label>
+                    <input type="email" name="t4" id="t4" class="form-control" placeholder="Enter email address">
+                </div>
+
+                <div class="form-group">
+                    <label for="t5">Address</label>
+                    <input type="text" name="t5" id="t5" class="form-control" placeholder="Enter your address">
+                </div>
+
+                <div class="form-group">
+                    <label for="t6">User Type</label>
+                    <select name="t6" id="t6" class="form-control">
+                        <option value="Bank">Bank</option>
+                        <option value="User">User</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Submit Registration</button>
+            </form>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Blockchain Based Cheque Verification & Clearance System.</p>
+    </footer>
+
+</body>
 </html>
