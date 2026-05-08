@@ -7,3 +7,4 @@ Second Terminal
 Change the hash in views.py Line 26
 3. cd ..
 4. python manage.py runserver
+5. Open http://127.0.0.1:8000/
